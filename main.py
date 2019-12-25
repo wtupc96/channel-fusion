@@ -62,12 +62,12 @@ transform_test = transforms.Compose([
 dataset = args.dataset
 
 if dataset == 'cifar10':
-    trainset = My_CIFAR10(root='../data', train=True, transform=transform_train, channel_fusion=args.channel_fusion)
-    testset = My_CIFAR10(root='../data', train=False, transform=transform_test)
+    trainset = My_CIFAR10(root='./data', train=True, transform=transform_train, channel_fusion=args.channel_fusion)
+    testset = My_CIFAR10(root='./data', train=False, transform=transform_test)
     num_classes = 10
 elif dataset == 'cifar100':
-    trainset = My_CIFAR100(root='../data', train=True, transform=transform_train, channel_fusion=args.channel_fusion)
-    testset = My_CIFAR100(root='../data', train=False, transform=transform_test)
+    trainset = My_CIFAR100(root='./data', train=True, transform=transform_train, channel_fusion=args.channel_fusion)
+    testset = My_CIFAR100(root='./data', train=False, transform=transform_test)
     num_classes = 100
 elif dataset == 'svhn':
     num_classes = 10
@@ -82,8 +82,8 @@ elif dataset == 'svhn':
         transforms.ToTensor(),
         transforms.Normalize((0.50705882, 0.48666667, 0.44078431), (0.26745098, 0.25647059, 0.27607843)),
     ])
-    trainset = My_SVHN('../data/svhn', split='train', transform=transform_train, channel_fusion=args.channel_fusion)
-    testset = My_SVHN('../data/svhn', split='test', transform=transform_test)
+    trainset = My_SVHN('./data/svhn', split='train', transform=transform_train, channel_fusion=args.channel_fusion)
+    testset = My_SVHN('./data/svhn', split='test', transform=transform_test)
 else:
     raise ValueError('Unsupported dataset.')
 
