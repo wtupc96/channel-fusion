@@ -106,10 +106,10 @@ class ChannelFusion:
     def __call__(self, img, target):
         img = np.asarray(img)
         channels = list()
-        channels.append(np.split(img, 3, -1))
+        channels.extend(np.split(img, 3, -1))
         two_other_img = random.choices(self.grouped_images[target], k=2)
         for toi in two_other_img:
-            channels.append(np.split(toi, 3, -1))
+            channels.extend(np.split(toi, 3, -1))
         chosen_channels = [np.squeeze(x) for x in random.choices(channels, k=3)]
 
         random.shuffle(chosen_channels)
