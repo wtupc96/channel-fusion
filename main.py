@@ -264,8 +264,7 @@ def eval(net, test_dataloader, epoch, criterion, args):
         torch.save(state,
                    os.path.join(
                        ckpt_path, 'ckpt_{}_{}_{}.pth'
-                           .format(args.dataset, args.model,
-                                   args.channel_fusion, args.lr, args.resume)))
+                           .format(args.channel_fusion, args.lr, args.resume)))
         best_acc = acc
 
 
