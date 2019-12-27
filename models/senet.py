@@ -114,7 +114,7 @@ def SENet18(num_classes):
 
 
 def test():
-    net = SENet18()
+    net = SENet18(10)
     y = net(torch.randn(1,3,32,32))
     print(y.size())
 

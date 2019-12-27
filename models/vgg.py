@@ -2,7 +2,6 @@
 import torch
 import torch.nn as nn
 
-
 cfg = {
     'VGG11': [64, 'M', 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
     'VGG13': [64, 64, 'M', 128, 128, 'M', 256, 256, 'M', 512, 512, 'M', 512, 512, 'M'],
@@ -39,8 +38,8 @@ class VGG(nn.Module):
 
 
 def test():
-    net = VGG('VGG11')
-    x = torch.randn(2,3,32,32)
+    net = VGG('VGG11', num_classes=10)
+    x = torch.randn(2, 3, 32, 32)
     y = net(x)
     print(y.size())
 

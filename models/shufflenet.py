@@ -14,9 +14,9 @@ class ShuffleBlock(nn.Module):
 
     def forward(self, x):
         '''Channel shuffle: [N,C,H,W] -> [N,g,C/g,H,W] -> [N,C/g,g,H,w] -> [N,C,H,W]'''
-        N,C,H,W = x.size()
+        N, C, H, W = x.size()
         g = self.groups
-        return x.view(N,g,C//g,H,W).permute(0,2,1,3,4).reshape(N,C,H,W)
+        return x.view(N, g, C // g, H, W).permute(0, 2, 1, 3, 4).reshape(N, C, H, W)
 
 
 class Bottleneck(nn.Module):
@@ -24,12 +24,13 @@ class Bottleneck(nn.Module):
         super(Bottleneck, self).__init__()
         self.stride = stride
 
-        mid_planes = out_planes/4
-        g = 1 if in_planes==24 else groups
+        mid_planes = out_planes / 4
+        g = 1 if in_planes == 24 else groups
         self.conv1 = nn.Conv2d(in_planes, mid_planes, kernel_size=1, groups=g, bias=False)
         self.bn1 = nn.BatchNorm2d(mid_planes)
         self.shuffle1 = ShuffleBlock(groups=g)
-        self.conv2 = nn.Conv2d(mid_planes, mid_planes, kernel_size=3, stride=stride, padding=1, groups=mid_planes, bias=False)
+        self.conv2 = nn.Conv2d(mid_planes, mid_planes, kernel_size=3, stride=stride, padding=1, groups=mid_planes,
+                               bias=False)
         self.bn2 = nn.BatchNorm2d(mid_planes)
         self.conv3 = nn.Conv2d(mid_planes, out_planes, kernel_size=1, groups=groups, bias=False)
         self.bn3 = nn.BatchNorm2d(out_planes)
@@ -44,7 +45,7 @@ class Bottleneck(nn.Module):
         out = F.relu(self.bn2(self.conv2(out)))
         out = self.bn3(self.conv3(out))
         res = self.shortcut(x)
-        out = F.relu(torch.cat([out,res], 1)) if self.stride==2 else F.relu(out+res)
+        out = F.relu(torch.cat([out, res], 1)) if self.stride == 2 else F.relu(out + res)
         return out
 
 
@@ -68,7 +69,7 @@ class ShuffleNet(nn.Module):
         for i in range(num_blocks):
             stride = 2 if i == 0 else 1
             cat_planes = self.in_planes if i == 0 else 0
-            layers.append(Bottleneck(self.in_planes, out_planes-cat_planes, stride=stride, groups=groups))
+            layers.append(Bottleneck(self.in_planes, out_planes - cat_planes, stride=stride, groups=groups))
             self.in_planes = out_planes
         return nn.Sequential(*layers)
 
@@ -85,24 +86,25 @@ class ShuffleNet(nn.Module):
 
 def ShuffleNetG2(num_classes):
     cfg = {
-        'out_planes': [200,400,800],
-        'num_blocks': [4,8,4],
+        'out_planes': [200, 400, 800],
+        'num_blocks': [4, 8, 4],
         'groups': 2
     }
     return ShuffleNet(cfg, num_classes)
 
+
 def ShuffleNetG3(num_classes):
     cfg = {
-        'out_planes': [240,480,960],
-        'num_blocks': [4,8,4],
+        'out_planes': [240, 480, 960],
+        'num_blocks': [4, 8, 4],
         'groups': 3
     }
     return ShuffleNet(cfg, num_classes)
 
 
 def test():
-    net = ShuffleNetG2()
-    x = torch.randn(1,3,32,32)
+    net = ShuffleNetG2(10)
+    x = torch.randn(1, 3, 32, 32)
     y = net(x)
     print(y)
 

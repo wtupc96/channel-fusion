@@ -16,7 +16,7 @@ class ShuffleBlock(nn.Module):
         '''Channel shuffle: [N,C,H,W] -> [N,g,C/g,H,W] -> [N,C/g,g,H,w] -> [N,C,H,W]'''
         N, C, H, W = x.size()
         g = self.groups
-        return x.view(N, g, C//g, H, W).permute(0, 2, 1, 3, 4).reshape(N, C, H, W)
+        return x.view(N, g, C // g, H, W).permute(0, 2, 1, 3, 4).reshape(N, C, H, W)
 
 
 class SplitBlock(nn.Module):
@@ -153,10 +153,9 @@ configs = {
 
 
 def test():
-    net = ShuffleNetV2(net_size=0.5)
+    net = ShuffleNetV2(net_size=0.5, num_classes=10)
     x = torch.randn(3, 3, 32, 32)
     y = net(x)
     print(y.shape)
-
 
 # test()
